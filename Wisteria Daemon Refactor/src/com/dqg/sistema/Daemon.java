@@ -63,35 +63,8 @@ public class Daemon {
 		Calculador calculador = new Calculador (sistema,configuracion.gettmp_Margen());
 
 
-		String dormitorio = configuracion.getSensorDormitorio();
-		String partes0[] = dormitorio.split("@");
-
-		String habitacion1 = configuracion.getSensorHabitacion1();
-		String partes1[] = habitacion1.split("@");
-		
-		String habitacion2 = configuracion.getSensorHabitacion2();
-		String partes2[] = habitacion2.split("@");
-		
-		MqttClient client = null;
 
 
-		if (partes0[0].equals("mqtt"))
-		{
-
-			log.debug("Sensor por mosquito.  Establecer función de callback");
-			try
-			{
-				client = new MqttClient(configuracion.getUrlMosquito(), MqttClient.generateClientId());
-				client.setCallback( new MqttCallBack(sistema, partes0[1],partes1[1], partes2[1]));
-				client.connect();
-				client.subscribe("shellies/#");
-				log.debug ("Conexión establecida mqtt.");
-			}
-			catch (Exception e)
-			{
-				log.error("Fallo conexión mqttt " + e);
-			}
-		}
 
 
 		Rele rele = new Rele(configuracion,sistema);
@@ -113,9 +86,6 @@ public class Daemon {
 		EnviarNotificaciones notificaciones = new EnviarNotificaciones (configuracion.getUrlTelegram());
 		notificaciones.enviar("Arrancando Sistema Domotico Wisteria");
 
-		/*NotificacionesInformacion notificaciones_info = new NotificacionesInformacion (notificaciones,sistema);
-		Timer timer_notificaciones = new Timer(true);
-		timer_notificaciones.scheduleAtFixedRate(notificaciones_info, 30000, configuracion.gettNotificaciones()* 1000);*/
 
 
 		GenerarXML generarxml = new GenerarXML (sistema, configuracion.getFicheroEstado()); 
@@ -123,8 +93,6 @@ public class Daemon {
 		timer_xml.scheduleAtFixedRate(generarxml, 0, configuracion.getTestado()* 1000);
 
 
-		//Servidor servidor = new Servidor(sistema, notificaciones,configuracion, basedatos);
-		//servidor.start();
 
 
 		if (configuracion.getEnviarCorreo())
@@ -159,6 +127,24 @@ public class Daemon {
 		timer_registro_web.scheduleAtFixedRate(registro_web, configuracion.gettRegistroWeb()*1000, configuracion.gettRegistroWeb()* 1000);
 		 */
 
+
+		MqttClient client = null;
+
+		log.debug("Conexión sension Mosquitto");
+		try
+		{
+			log.debug("ULR Mosqueto: " + configuracion.getUrlMosquito());
+			client = new MqttClient(configuracion.getUrlMosquito(), MqttClient.generateClientId());
+			client.setCallback( new MqttCallBack(sistema, configuracion.getSensorDormitorio(), configuracion.getSensorHabitacion1(),configuracion.getSensorHabitacion2())); 
+			client.connect();
+			client.subscribe("#");
+			log.debug ("Conexión establecida mqtt.");
+		}
+		catch (Exception e)
+		{
+			log.error("Fallo conexión mqttt " + e);
+			notificaciones.enviar("Fallo conexión MQTT");
+		}
 
 
 

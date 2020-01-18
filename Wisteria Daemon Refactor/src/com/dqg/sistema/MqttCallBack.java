@@ -22,14 +22,15 @@ public class MqttCallBack implements MqttCallback {
 	}
 
 	public void connectionLost(Throwable throwable) {
-		System.out.println("Connection to MQTT broker lost!");
+		log.error("Connection to MQTT broker lost! " + throwable);
 	}
 
 	public void messageArrived(String subject, MqttMessage mqttMessage) throws Exception {
 		String mensaje = new String(mqttMessage.getPayload());
   
-
 		log.debug ("Recibido mqtt: " +  subject + " " + mensaje);
+
+		
 
 
 		Float medicion;
@@ -82,7 +83,8 @@ public class MqttCallBack implements MqttCallback {
 		
 	}
 
-	public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-		// not used in this example
+	public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) 
+	{
+ 
 	}
 }
