@@ -70,7 +70,18 @@ public class Configuracion {
 	
 	private String urlTelegram;
 	private String urlMosquito;
+
+	private String subjectMosquito;
 	
+	
+	public String getSubjectMosquito() {
+		return subjectMosquito;
+	}
+
+	public void setSubjectMosquito(String subjectMosquito) {
+		this.subjectMosquito = subjectMosquito;
+	}
+
 	public String getUrlMosquito() {
 		return urlMosquito;
 	}
@@ -182,6 +193,7 @@ public class Configuracion {
 			urlMosquito= prop.getProperty("urlMosquito");
 
 
+			subjectMosquito= prop.getProperty("subjectMosquito");
 
 		}catch (Exception e)
 		{

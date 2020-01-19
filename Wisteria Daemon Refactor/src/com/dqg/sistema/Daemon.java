@@ -137,7 +137,8 @@ public class Daemon {
 			client = new MqttClient(configuracion.getUrlMosquito(), MqttClient.generateClientId());
 			client.setCallback( new MqttCallBack(sistema, configuracion.getSensorDormitorio(), configuracion.getSensorHabitacion1(),configuracion.getSensorHabitacion2())); 
 			client.connect();
-			client.subscribe("#");
+			client.subscribe(configuracion.getSubjectMosquito());
+			log.debug("Subscrito a: " + configuracion.getSubjectMosquito());
 			log.debug ("Conexión establecida mqtt.");
 		}
 		catch (Exception e)
