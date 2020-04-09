@@ -42,7 +42,8 @@ public class ProgramaExterno {
 		// Se lee la primera linea 
 		res = br.readLine(); 
 
-
+		// Cerrar el fichero
+		br.close();
 		return res;
 	}  
 }
