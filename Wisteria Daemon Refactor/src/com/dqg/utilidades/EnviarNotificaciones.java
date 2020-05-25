@@ -66,7 +66,7 @@ public class EnviarNotificaciones {
 			}
 		}catch(Exception e)
 		{
-			e.printStackTrace();
+			log.error ("Fallo envío notificacions: " + e);
 		}
 		
 
