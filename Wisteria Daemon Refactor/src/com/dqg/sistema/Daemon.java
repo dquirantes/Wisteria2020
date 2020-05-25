@@ -145,6 +145,7 @@ public class Daemon {
 		{
 			log.error("Fallo conexión mqttt " + e);
 			notificaciones.enviar("Fallo conexión MQTT");
+			System.exit(-1);
 		}
 
 
