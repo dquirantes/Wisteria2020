@@ -33,9 +33,9 @@ public class CambioDia  extends TimerTask {
 
 		if (sistema.getArranques()>0)
 			notificaciones.enviar("Tiempo funcionamiento: " + sistema.getTiempoFuncionando());
-		else
+		/*else
 			notificaciones.enviar("Caldera sin funcionar hoy!");
-
+*/
 		
 		log.debug("Tiempo funcionamiento: " + sistema.getTiempoFuncionando());
 
