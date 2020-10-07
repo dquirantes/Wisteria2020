@@ -8,7 +8,7 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
-import com.dqg.config.Configuracion;
+
 import com.dqg.sistema.datos.BaseDatos;
 import com.dqg.tipos.ErroresSistema;
 import com.dqg.tipos.ModoSistema;
@@ -24,13 +24,16 @@ public class PanelActuador extends TimerTask {
 	private BaseDatos basedatos;
 
 	private int codigo_instruccion = 0;
-
+	private String urlHA;
+	private String header;
 	
 
-	public PanelActuador (SistemaDomotico sistema, BaseDatos basedatos, Configuracion config)
+	public PanelActuador (SistemaDomotico sistema, BaseDatos basedatos, String urlHA, String header)
 	{
 		this.sistema = sistema;
 		this.basedatos = basedatos;
+		this.urlHA = urlHA;
+		this.header = header;
 	}
 
 	@Override
@@ -79,17 +82,15 @@ public class PanelActuador extends TimerTask {
 					log.debug ("Climatizador temp: " + sistema.getTemperatura_Climatizador());
 					//log.debug ("Notificaciones: " + sistema.getEnviarNotificaciones());
 					
-					URL url = new URL ("http://192.168.1.5:8123/api/services/climate/set_temperature");
+					URL url = new URL (urlHA);
 					
 					HttpURLConnection con = (HttpURLConnection)url.openConnection();
 					con.setRequestMethod("POST");
-					con.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIzYjYzMTQ1YTg2ZmE0Mzg1ODM0NjQxMmM5MDRlM2UwMiIsImlhdCI6MTU5MDY5NDYzMywiZXhwIjoxOTA2MDU0NjMzfQ.PPAm7WPxqAJYYa6i0tp3vMvDQgkGNkDXqAI98vTaf3M");
+					con.setRequestProperty("Authorization", header);
 					con.setRequestProperty("Content-Type", "application/json; utf-8");
 					con.setRequestProperty("Accept", "application/json");
 					con.setDoOutput(true);
-
-					
-					
+	
 					
 					
 					String jsonInputString = "{\"entity_id\":\"climate.termostato\", \"temperature\":\"" + partes[1] + "\"}";

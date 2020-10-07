@@ -10,53 +10,32 @@ import org.apache.log4j.Logger;
 public class EnviarNotificaciones {
 
 	private static final Logger log = Logger.getLogger("Dameon");			
-	private String url_telegram;
+	private String urlNotificaciones;
+	private String header;
 	
-	public EnviarNotificaciones (String url)
+	public EnviarNotificaciones (String url, String header)
 	{
-		this.url_telegram = url;
+		this.urlNotificaciones = url;
+		this.header = header;
 
 
 	}
 	public void enviar (String texto)
 	{
-		//String args = programa + " \""  + texto + "\"";
-
-		/*ProgramaExterno programa_externo = new ProgramaExterno();
 
 		try
 		{
-			programa_externo.ejecutar(programa,texto);	
-		}catch (Exception e)
-		{
-			log.error ("Excepcion envio notificaciones " + e);
-		}
 
-
-		log.debug("Enviar notificacion ");
-		//log.debug ("ejecutar: " + argumentos);
-
-		 */
-		try
-		{
+			URL url = new URL(urlNotificaciones);
 			
-			URL url = new URL (" http://192.168.1.5:8123/api/services/notify/notify");		
-
-			//URL url = new URL ("http://192.168.1.40/api/pRsDhAIMLcIUfNI8iWM1AJtWGCg7BsRU19AFeSfk/groups/2/action");
-
-			
-
 			HttpURLConnection con = (HttpURLConnection)url.openConnection();
 			con.setRequestMethod("POST");
-			con.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIzYjYzMTQ1YTg2ZmE0Mzg1ODM0NjQxMmM5MDRlM2UwMiIsImlhdCI6MTU5MDY5NDYzMywiZXhwIjoxOTA2MDU0NjMzfQ.PPAm7WPxqAJYYa6i0tp3vMvDQgkGNkDXqAI98vTaf3M");
+			con.setRequestProperty("Authorization", header);
 			con.setRequestProperty("Content-Type", "application/json; utf-8");
 			con.setRequestProperty("Accept", "application/json");
 			con.setDoOutput(true);
 
-			
-			
-			
-			
+						
 			String jsonInputString = "{\"message\":\"" + texto+ "\", \"title\":\"HomeAssistant Raspberry\"}";
 			try(OutputStream os = con.getOutputStream()) {
 				byte[] input = jsonInputString.getBytes("utf-8");

@@ -68,12 +68,32 @@ public class Configuracion {
 	private String ShellyEnceder;
 	private String ShellyApagar;
 	
-	private String urlTelegram;
+	private String urlNotificaciones;
 	private String urlMosquito;
 
 	private String subjectMosquito;
 	
 	
+	private String headerHA;
+	private String urlCambioClimatizador;
+	
+	
+	public String getHeaderHA() {
+		return headerHA;
+	}
+
+	public void setHeaderHA(String headerHA) {
+		this.headerHA = headerHA;
+	}
+
+	public String getUrlCambioClimatizador() {
+		return urlCambioClimatizador;
+	}
+
+	public void setUrlCambioClimatizador(String urlCambioClimatizador) {
+		this.urlCambioClimatizador = urlCambioClimatizador;
+	}
+
 	public String getSubjectMosquito() {
 		return subjectMosquito;
 	}
@@ -90,12 +110,12 @@ public class Configuracion {
 		this.urlMosquito = urlMosquito;
 	}
 
-	public String getUrlTelegram() {
-		return urlTelegram;
+	public String getUrlNotifaciones() {
+		return urlNotificaciones;
 	}
 
-	public void setUrlTelegram(String urlTelegram) {
-		this.urlTelegram = urlTelegram;
+	public void setUrlNotifaciones(String urlNotifaciones) {
+		this.urlNotificaciones = urlNotifaciones;
 	}
 
 	public String getShellyEstado() {
@@ -188,12 +208,16 @@ public class Configuracion {
 			ShellyEnceder= prop.getProperty("ShellyEnceder");
 			ShellyApagar= prop.getProperty("ShellyApagar");
 			
-			urlTelegram= prop.getProperty("urlTelegram");
+			urlNotificaciones= prop.getProperty("urlNotificaciones");
 			
 			urlMosquito= prop.getProperty("urlMosquito");
 
 
 			subjectMosquito= prop.getProperty("subjectMosquito");
+			
+			headerHA= prop.getProperty("headerHA");
+			urlCambioClimatizador= prop.getProperty("urlCambioClimatizador");
+
 
 		}catch (Exception e)
 		{

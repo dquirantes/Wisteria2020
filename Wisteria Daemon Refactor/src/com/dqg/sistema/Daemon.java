@@ -51,7 +51,7 @@ public class Daemon {
 		log.info ("URL Shelley abrir: " + configuracion.getShellyEnceder());
 		log.info ("URL Shelley cerrar: " + configuracion.getShellyApagar());
 		log.info ("script temperatura: " + configuracion.getProgramaSensor());
-		log.info ("URL Telegram: " + configuracion.getUrlTelegram());
+		log.info ("URL Notificaciones: " + configuracion.getUrlNotifaciones());
 		log.info ("script placa: " + configuracion.getProgramaPlaca());
 		log.info ("BBDD: " + configuracion.getBDName());		
 		log.info ("URL Tiempo: " + configuracion.getURLTiempo());
@@ -83,7 +83,7 @@ public class Daemon {
 		EnviarCorreo correo = new EnviarCorreo(configuracion.getCorrreoFrom(), configuracion.getCorrreoUsuario(), configuracion.getCorrreoPassword(), configuracion.getCorrreoHost(),configuracion.getCorrreoPuerto());
 
 
-		EnviarNotificaciones notificaciones = new EnviarNotificaciones (configuracion.getUrlTelegram());
+		EnviarNotificaciones notificaciones = new EnviarNotificaciones (configuracion.getUrlNotifaciones(), configuracion.getHeaderHA());
 		notificaciones.enviar("Arrancando Sistema Domotico Wisteria");
 
 
@@ -113,7 +113,7 @@ public class Daemon {
 		timer_externa.scheduleAtFixedRate(temp_externa , 0, configuracion.gettExterno()*1000);
 
 
-		PanelActuador actuador = new PanelActuador(sistema, basedatos, configuracion);  
+		PanelActuador actuador = new PanelActuador(sistema, basedatos, configuracion.getUrlCambioClimatizador(),configuracion.getHeaderHA());  
 		Timer timer_actuador = new Timer(true);       
 		timer_actuador.scheduleAtFixedRate(actuador , 0, configuracion.gettActuador() * 1000);
 
