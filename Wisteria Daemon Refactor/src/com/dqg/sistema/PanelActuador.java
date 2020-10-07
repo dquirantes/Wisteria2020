@@ -1,4 +1,9 @@
 package com.dqg.sistema;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
@@ -73,6 +78,38 @@ public class PanelActuador extends TimerTask {
 					log.debug ("Opciones  modo: " + sistema.get_opcionesModo());
 					log.debug ("Climatizador temp: " + sistema.getTemperatura_Climatizador());
 					//log.debug ("Notificaciones: " + sistema.getEnviarNotificaciones());
+					
+					URL url = new URL ("http://192.168.1.5:8123/api/services/climate/set_temperature");
+					
+					HttpURLConnection con = (HttpURLConnection)url.openConnection();
+					con.setRequestMethod("POST");
+					con.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIzYjYzMTQ1YTg2ZmE0Mzg1ODM0NjQxMmM5MDRlM2UwMiIsImlhdCI6MTU5MDY5NDYzMywiZXhwIjoxOTA2MDU0NjMzfQ.PPAm7WPxqAJYYa6i0tp3vMvDQgkGNkDXqAI98vTaf3M");
+					con.setRequestProperty("Content-Type", "application/json; utf-8");
+					con.setRequestProperty("Accept", "application/json");
+					con.setDoOutput(true);
+
+					
+					
+					
+					
+					String jsonInputString = "{\"entity_id\":\"climate.termostato\", \"temperature\":\"" + partes[1] + "\"}";
+					
+					log.debug("Petición: "+ jsonInputString);
+					
+					try(OutputStream os = con.getOutputStream()) {
+						byte[] input = jsonInputString.getBytes("utf-8");
+						os.write(input, 0, input.length);           
+					}
+
+					try(BufferedReader br = new BufferedReader(
+							new InputStreamReader(con.getInputStream(), "utf-8"))) {
+						StringBuilder response = new StringBuilder();
+						String responseLine = null;
+						while ((responseLine = br.readLine()) != null) {
+							response.append(responseLine.trim());
+						}
+						log.debug("HomeAssitant: "+ response.toString());
+					}
 				}
 			}catch (Exception e)
 			{
