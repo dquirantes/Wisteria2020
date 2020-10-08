@@ -14,6 +14,7 @@ import com.dqg.sistema.datos.BaseDatos;
 import com.dqg.tipos.EstadoRele;
 import com.dqg.utilidades.EnviarCorreo;
 import com.dqg.utilidades.EnviarNotificaciones;
+import com.dqg.utilidades.HomeAssistant;
 
 
 
@@ -62,7 +63,7 @@ public class Daemon {
 		BaseDatos basedatos = new BaseDatos(configuracion);
 		Calculador calculador = new Calculador (sistema,configuracion.gettmp_Margen());
 
-
+		
 
 
 
@@ -70,7 +71,7 @@ public class Daemon {
 		Rele rele = new Rele(configuracion,sistema);
 
 
-
+		HomeAssistant ha = new HomeAssistant(configuracion);
 
 
 		File FLAG_FILE = new File(configuracion.getFicheroTemporal());
@@ -83,7 +84,7 @@ public class Daemon {
 		EnviarCorreo correo = new EnviarCorreo(configuracion.getCorrreoFrom(), configuracion.getCorrreoUsuario(), configuracion.getCorrreoPassword(), configuracion.getCorrreoHost(),configuracion.getCorrreoPuerto());
 
 
-		EnviarNotificaciones notificaciones = new EnviarNotificaciones (configuracion.getUrlNotifaciones(), configuracion.getHeaderHA());
+		EnviarNotificaciones notificaciones = new EnviarNotificaciones (ha);
 		notificaciones.enviar("Arrancando Sistema Domotico Wisteria");
 
 
@@ -113,7 +114,7 @@ public class Daemon {
 		timer_externa.scheduleAtFixedRate(temp_externa , 0, configuracion.gettExterno()*1000);
 
 
-		PanelActuador actuador = new PanelActuador(sistema, basedatos, configuracion.getUrlCambioClimatizador(),configuracion.getHeaderHA());  
+		PanelActuador actuador = new PanelActuador(sistema, basedatos, ha);  
 		Timer timer_actuador = new Timer(true);       
 		timer_actuador.scheduleAtFixedRate(actuador , 0, configuracion.gettActuador() * 1000);
 
