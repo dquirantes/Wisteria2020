@@ -14,7 +14,6 @@ public class HomeAssistant
 {
 
 	private static final Logger log = Logger.getLogger("Dameon");
-
 	private Configuracion config;
 
 
@@ -25,37 +24,41 @@ public class HomeAssistant
 	}
 
 
+	private void peticionRest(String urlParam, String texto) throws Exception
+	{
+		URL url = new URL(urlParam);
+
+		HttpURLConnection con = (HttpURLConnection)url.openConnection();
+		con.setRequestMethod("POST");
+		con.setRequestProperty("Authorization", this.config.getHeaderHA());
+		con.setRequestProperty("Content-Type", "application/json; utf-8");
+		con.setRequestProperty("Accept", "application/json");
+		con.setDoOutput(true);
+
+		try(OutputStream os = con.getOutputStream()) 
+		{
+			byte[] input = texto.getBytes("utf-8");
+			os.write(input, 0, input.length);           
+		}
+
+		try(BufferedReader br = new BufferedReader(
+				new InputStreamReader(con.getInputStream(), "utf-8"))) {
+			StringBuilder response = new StringBuilder();
+			String responseLine = null;
+			while ((responseLine = br.readLine()) != null) {
+				response.append(responseLine.trim());
+			}
+
+			log.debug("Recibido: " + response.toString());
+		}
+
+
+	}
 	public void enviarNotificaciones(String texto)
 	{
 		try
 		{
-
-			URL url = new URL(this.config.getUrlNotifaciones());				
-
-			HttpURLConnection con = (HttpURLConnection)url.openConnection();
-			con.setRequestMethod("POST");
-			con.setRequestProperty("Authorization", this.config.getHeaderHA());
-			con.setRequestProperty("Content-Type", "application/json; utf-8");
-			con.setRequestProperty("Accept", "application/json");
-			con.setDoOutput(true);
-
-
-			try(OutputStream os = con.getOutputStream()) 
-			{
-				byte[] input = texto.getBytes("utf-8");
-				os.write(input, 0, input.length);           
-			}
-
-			try(BufferedReader br = new BufferedReader(
-					new InputStreamReader(con.getInputStream(), "utf-8"))) {
-				StringBuilder response = new StringBuilder();
-				String responseLine = null;
-				while ((responseLine = br.readLine()) != null) {
-					response.append(responseLine.trim());
-				}
-
-				log.debug("Recibido: " + response.toString());
-			}
+			this.peticionRest(this.config.getUrlNotifaciones(),texto);
 		}
 		catch (Exception e)
 		{
@@ -67,38 +70,13 @@ public class HomeAssistant
 	}
 	public void enviarClimatizador(String texto)
 	{
-		
 		try
 		{
+			this.peticionRest(this.config.getUrlCambioClimatizador(),texto);
 
-			URL url = new URL (config.getUrlCambioClimatizador());
-
-			HttpURLConnection con = (HttpURLConnection)url.openConnection();
-			con.setRequestMethod("POST");
-			con.setRequestProperty("Authorization", config.getHeaderHA());
-			con.setRequestProperty("Content-Type", "application/json; utf-8");
-			con.setRequestProperty("Accept", "application/json");
-			con.setDoOutput(true);
-
-			log.debug("Petición: "+ texto);
-
-			try(OutputStream os = con.getOutputStream()) {
-				byte[] input = texto.getBytes("utf-8");
-				os.write(input, 0, input.length);           
-			}
-
-			try(BufferedReader br = new BufferedReader(
-					new InputStreamReader(con.getInputStream(), "utf-8"))) {
-				StringBuilder response = new StringBuilder();
-				String responseLine = null;
-				while ((responseLine = br.readLine()) != null) {
-					response.append(responseLine.trim());
-				}
-				log.debug("HomeAssitant: "+ response.toString());
-			}
 		}catch (Exception e)
 		{
-			log.error("Excpeción: " + e);
+			log.error("Fallo enviar climatizador a HA: " + e.getMessage());
 		}
 	}
 }
