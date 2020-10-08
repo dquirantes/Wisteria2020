@@ -35,6 +35,10 @@ public class HomeAssistant
 		con.setRequestProperty("Accept", "application/json");
 		con.setDoOutput(true);
 
+		log.debug("peticion " + texto);
+		
+		log.debug("url" + urlParam);
+		
 		try(OutputStream os = con.getOutputStream()) 
 		{
 			byte[] input = texto.getBytes("utf-8");

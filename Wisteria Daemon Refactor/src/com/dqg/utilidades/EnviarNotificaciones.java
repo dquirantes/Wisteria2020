@@ -18,7 +18,9 @@ public class EnviarNotificaciones {
 	}
 	public void enviar (String texto)
 	{
+		String jsonInputString = "{\"message\":\"" + texto+ "\", \"title\":\"HomeAssistant Raspberry\"}";
+
 		log.debug ("Envío notificaciones");
-		ha.enviarNotificaciones(texto);
+		ha.enviarNotificaciones(jsonInputString);
 	}
 }
